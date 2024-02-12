@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Infrastructure.Context;
 using System;
 using System.Threading;

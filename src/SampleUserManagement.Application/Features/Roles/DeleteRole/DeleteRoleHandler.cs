@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities;
 using System;
 using System.Threading;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Roles.DeleteRole
 {
-	public class DeleteRoleHandler : IRequestHandler<DeleteRoleRequest, DeleteRoleResponse>
+    public class DeleteRoleHandler : IRequestHandler<DeleteRoleRequest, DeleteRoleResponse>
     {
         private readonly IRepository<Role> _repository;
         private readonly IUnitOfWork _unitOfWork;

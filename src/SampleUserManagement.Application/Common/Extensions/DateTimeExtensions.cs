@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SampleUserManagement.Application.Extensions
+namespace SampleUserManagement.Application.Common.Extensions
 {
     public static class DateTimeExtensions
     {
@@ -21,7 +21,7 @@ namespace SampleUserManagement.Application.Extensions
 
         public static string? ToString(this DateOnly? dateOnly, string pattern)
         {
-			return dateOnly?.ToString(pattern);
+            return dateOnly?.ToString(pattern);
         }
     }
 }

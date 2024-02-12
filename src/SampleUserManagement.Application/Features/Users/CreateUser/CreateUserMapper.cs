@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SampleUserManagement.Application.Common;
-using SampleUserManagement.Application.Extensions;
+using SampleUserManagement.Application.Common.Extensions;
 using SampleUserManagement.Domain.Entities;
 
 namespace SampleUserManagement.Application.Features.Users.CreateUser

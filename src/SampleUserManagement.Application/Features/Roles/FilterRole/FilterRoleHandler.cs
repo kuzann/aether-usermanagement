@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace SampleUserManagement.Application.Features.Roles.FilterRole
 
         public async Task<List<FilterRoleResponse>> Handle(FilterRoleRequest request, CancellationToken cancellationToken)
         {
-            var roles = _repository.GetAll();
+            var roles = _repository.Filter();
             if (!string.IsNullOrEmpty(request.Name))
             {
                 roles = roles.Where(user => user.Name.Contains(request.Name));

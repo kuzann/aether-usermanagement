@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities;
 using System;
 using System.Threading;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Roles.UpdateRole
 {
-	public class UpdateRoleHandler : IRequestHandler<UpdateRoleRequest, UpdateRoleResponse>
+    public class UpdateRoleHandler : IRequestHandler<UpdateRoleRequest, UpdateRoleResponse>
     {
         private readonly IRepository<Role> _repository;
         private readonly IUnitOfWork _unitOfWork;

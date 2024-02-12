@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities;
 using System.Threading;
 using System.Threading.Tasks;

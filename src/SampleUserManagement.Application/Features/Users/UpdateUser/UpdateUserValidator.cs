@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using SampleUserManagement.Application.Common;
-using SampleUserManagement.Application.Extensions;
+using SampleUserManagement.Application.Common.Extensions;
 
 namespace SampleUserManagement.Application.Features.Users.UpdateUser
 {

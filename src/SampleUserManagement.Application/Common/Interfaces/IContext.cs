@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SampleUserManagement.Application.Common
+namespace SampleUserManagement.Application.Common.Interfaces
 {
     public interface IContext : IDisposable, IAsyncDisposable
     {

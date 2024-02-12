@@ -42,5 +42,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapRoleEndpoints();
+app.MapProductEndpoints();
 
 app.Run();

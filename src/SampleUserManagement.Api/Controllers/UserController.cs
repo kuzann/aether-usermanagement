@@ -29,13 +29,12 @@ namespace SampleUserManagement.Api.Controllers
         /// <summary>
         /// API to search user by specified filter
         /// </summary>
-        /// <param name="request">Filter user request</param>
         /// <param name="cancellationToken">token buat cancel</param>
         /// <returns></returns>
         [HttpGet()]
-        public async Task<IActionResult> Filter([FromQuery] FilterUserRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Filter(CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(request, cancellationToken);
+            var response = await _mediator.Send(new FilterUserRequest(HttpContext.Request.Query), cancellationToken);
             return Ok(response);
         }
 

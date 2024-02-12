@@ -1,4 +1,4 @@
-﻿using SampleUserManagement.Application.Common;
+﻿using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;

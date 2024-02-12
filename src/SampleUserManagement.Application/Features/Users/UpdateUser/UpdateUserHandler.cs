@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleUserManagement.Application.Common;
-using SampleUserManagement.Application.Extensions;
+using SampleUserManagement.Application.Common.Extensions;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities;
 using System;
 using System.Threading;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.UpdateUser
 {
-	public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, UpdateUserResponse>
+    public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, UpdateUserResponse>
     {
         private readonly IRepository<User> _repository;
         private readonly IUnitOfWork _unitOfWork;

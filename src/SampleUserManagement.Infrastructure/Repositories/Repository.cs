@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
@@ -48,11 +48,20 @@ namespace SampleUserManagement.Infrastructure.Repositories
             return await _dbSet.FirstOrDefaultAsync(e => e.Id == id && e.DeletedAt == null, cancellationToken);
         }
 
-        // TO DO : change approach to not use ToList directly
-        public IQueryable<TEntity> GetAll()
+        public IQueryable<TEntity> Filter()
         {
             return _dbSet.Where(e => e.DeletedAt == null);
         }
 
-    }
+		public async Task<int> CountAsync(IQueryable<TEntity> query, CancellationToken cancellationToken)
+		{
+			return await query.CountAsync(cancellationToken);
+		}
+
+		public async Task<List<TEntity>> ExecuteAsync(IQueryable<TEntity> query, CancellationToken cancellationToken)
+		{
+			return await query.ToListAsync(cancellationToken);
+		}
+
+	}
 }
