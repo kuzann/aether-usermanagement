@@ -6,10 +6,6 @@ using SampleUserManagement.Application.Common.Extensions;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.FilterUser
 {
@@ -18,6 +14,9 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContext;
+
+        private const int DEFAULT_PAGE = 1;
+        private const int DEFAULT_PAGE_SIZE = 10;
 
         public FilterUserHandler(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContext)
         {
@@ -28,26 +27,36 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
 
         public async Task<PaginatedList<FilterUserResponse>> Handle(FilterUserRequest request, CancellationToken cancellationToken)
         {
-            var filters = request.QueryCollection.ToFilter();
+            var filters = request.QueryCollection.GetFilters();
 
             var users = _repository.Filter();
 
-            User test = new User();
-            bool exist = test.IsPropertyExists("id");
-
+            // Implement filter
             if (filters.Any())
             {
                 users = users.ApplyFilter<User>(filters);
             }
-   //         if (!string.IsNullOrEmpty(request.Email))
-   //         {
-   //             users = users.Where(user => user.Email.Contains(request.Email));
-   //         }
-			//if (!string.IsNullOrEmpty(request.FullName))
-			//{
-			//	users = users.Where(user => !string.IsNullOrEmpty(user.FullName) && user.FullName.Contains(request.FullName));
-			//}
-			return new PaginatedList<FilterUserResponse>(_mapper.Map<List<FilterUserResponse>>(await users.ToListAsync(cancellationToken)));
+
+            // Implement sorting
+            string? sort = request.QueryCollection["sort"];
+            if (!string.IsNullOrEmpty(sort))
+            {
+                bool.TryParse(request.QueryCollection["sortasc"], out bool sortAsc);
+                users = users.ApplySorting(sort, sortAsc);
+            }
+
+            // Implement pagination
+            int limit = request.QueryCollection.GetIntValueFromQuery("limit", DEFAULT_PAGE_SIZE);
+            int page = request.QueryCollection.GetIntValueFromQuery("page", DEFAULT_PAGE);
+            int totalData = await _repository.CountAsync(users, cancellationToken);
+            int totalPage = FilterExtensions.GetPageTotal(totalData, limit);
+            users = users.ApplyPagination(page, limit);
+
+            var data = _mapper.Map<List<FilterUserResponse>>(await _repository.ExecuteAsync(users, cancellationToken));
+
+            var meta = new Meta(data.Count, totalData, page, totalPage, limit);
+
+			return new PaginatedList<FilterUserResponse>(data, meta, new Links());
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Infrastructure.Context;
 using SampleUserManagement.Infrastructure.Repositories;
@@ -12,7 +13,10 @@ namespace SampleUserManagement.Infrastructure.Configurations
     {
         public static void AddDatabaseSetup(this IServiceCollection services, IConfiguration configuration)
         {
+            var logger = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>().CreateLogger(typeof(DatabaseSetup));
+
             string? dbProvider = configuration.GetSection("Infrastructure:Database:Provider").Value;
+            logger.LogInformation($"Starting to setup database. Database provider used: {dbProvider}");
             switch (dbProvider)
             {
                 case "Postgres":
@@ -28,6 +32,8 @@ namespace SampleUserManagement.Infrastructure.Configurations
             }
             services.AddHostedService<ApplicationDbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            logger.LogInformation("Database setup finished.");
         }
     }
 }

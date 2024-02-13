@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace SampleUserManagement.Application.Common.Responses
             Data = data;
             Meta = new Meta();
             Links = new Links();
+        }
+
+        public PaginatedList(List<T> data, Meta meta, Links links)
+        {
+            Data = data;
+            Meta = meta;
+            Links = links;
         }
     }
 
