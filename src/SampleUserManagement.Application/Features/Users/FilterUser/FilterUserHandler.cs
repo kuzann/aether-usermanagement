@@ -2,14 +2,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using SampleUserManagement.Application.Common.Extensions;
+using SampleUserManagement.Application.Common.Filters;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace SampleUserManagement.Application.Features.Users.FilterUser
 {
-    public class FilterUserHandler : IRequestHandler<FilterUserRequest, PaginatedList<FilterUserResponse>>
+	public record FilterUserRequest(IQueryCollection QueryCollection) : IRequest<PaginatedList<UserResponse>>;
+
+	public class FilterUserHandler : IRequestHandler<FilterUserRequest, PaginatedList<UserResponse>>
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
@@ -25,7 +28,7 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             _httpContext = httpContext;
         }
 
-        public async Task<PaginatedList<FilterUserResponse>> Handle(FilterUserRequest request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<UserResponse>> Handle(FilterUserRequest request, CancellationToken cancellationToken)
         {
             var filters = request.QueryCollection.GetFilters();
 
@@ -34,8 +37,22 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             // Implement filter
             if (filters.Any())
             {
-                users = users.ApplyFilter<User>(filters);
+                //users = users.ApplyFilter<User>(filters);
             }
+
+            var parameter = Expression.Parameter(typeof(User));
+            var property = Expression.Property(parameter, "FullName");
+            var propAsObject = Expression.Convert(property, typeof(object));
+
+            var sortExpr = Expression.Lambda<Func<User, object>>(propAsObject, parameter);
+
+            Func<User, bool> filterFunc = user => user.FullName.Equals("Marion Bosco");
+            Expression<Func<User, bool>> filterExprConvert = user => filterFunc(user);
+			//var compiler = filterExprConvert.Compile();
+			users = users.Where(user => filterFunc.Invoke(user));
+
+			Expression<Func<User, bool>> filterExprDirect = user => user.FullName.Contains("Ida");
+            //users = users.Where(filterExprDirect);
 
             // Implement sorting
             string? sort = request.QueryCollection["sort"];
@@ -52,11 +69,11 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             int totalPage = FilterExtensions.GetPageTotal(totalData, limit);
             users = users.ApplyPagination(page, limit);
 
-            var data = _mapper.Map<List<FilterUserResponse>>(await _repository.ExecuteAsync(users, cancellationToken));
+            var data = _mapper.Map<List<UserResponse>>(await _repository.ExecuteAsync(users, cancellationToken));
 
             var meta = new Meta(data.Count, totalData, page, totalPage, limit);
 
-			return new PaginatedList<FilterUserResponse>(data, meta, new Links());
+			return new PaginatedList<UserResponse>(data, meta, new Links());
         }
     }
 }

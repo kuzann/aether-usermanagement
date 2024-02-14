@@ -9,7 +9,7 @@ namespace SampleUserManagement.Application.Features.Users.GetUser
     {
         public GetUserMapper()
         {
-            CreateMap<User, GetUserResponse>()
+            CreateMap<User, UserResponse>()
                 .ForMember(response => response.DateOfBirth, config => config.MapFrom(source => source.DateOfBirth.ToString(Constants.DATE_FORMAT)));
         }
     }

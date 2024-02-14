@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleUserManagement.Application.Common.Interfaces;
+using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.DeleteUser
 {
-    public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, DeleteUserResponse>
+	public record DeleteUserRequest(Guid Id) : IRequest<BaseResponse<UserResponse>>;
+
+	public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, BaseResponse<UserResponse>>
     {
         private readonly IRepository<User> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +27,7 @@ namespace SampleUserManagement.Application.Features.Users.DeleteUser
             _mapper = mapper;
         }
 
-        public async Task<DeleteUserResponse> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<UserResponse>> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
@@ -34,7 +37,7 @@ namespace SampleUserManagement.Application.Features.Users.DeleteUser
             _repository.Delete(user);
             await _unitOfWork.Commit();
 
-            return _mapper.Map<DeleteUserResponse>(user);
+            return new BaseResponse<UserResponse>(_mapper.Map<UserResponse>(user));
         }
     }
 }

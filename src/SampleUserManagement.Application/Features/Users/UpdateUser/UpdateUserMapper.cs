@@ -7,7 +7,7 @@ namespace SampleUserManagement.Application.Features.Users.UpdateUser
 	{
         public UpdateUserMapper()
         {
-            CreateMap<User, UpdateUserResponse>();
+            CreateMap<User, UserResponse>();
         }
     }
 }

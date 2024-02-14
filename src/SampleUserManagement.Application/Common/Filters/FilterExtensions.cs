@@ -8,8 +8,9 @@ using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SampleUserManagement.Application.Common.Extensions
+namespace SampleUserManagement.Application.Common.Filters
 {
     public static class FilterExtensions
     {
@@ -44,9 +45,13 @@ namespace SampleUserManagement.Application.Common.Extensions
         {
             foreach (var filter in filters)
             {
-                var test = ToLambda<T>(filter.Field);
+                var parameter = Expression.Parameter(typeof(T));
+                var property = Expression.Property(parameter, filter.Field);
+                var propAsObject = Expression.Convert(property, typeof(object));
 
-                var test2 = query.AsQueryable().OrderBy(test);
+                var expr = Expression.Lambda<Func<T, object>>(propAsObject, parameter);
+
+                //var test2 = query.AsQueryable().OrderBy(test);
 
                 switch (filter.Operator)
                 {
@@ -76,27 +81,17 @@ namespace SampleUserManagement.Application.Common.Extensions
 
                     case "like":
                         //query = query.Where(e => EF.Functions.Like(e.Property, ));
-                        query = query.Where(e => EF.Functions.Like(filter.Value, $"%{filter.Value}%"));
+                        //query = query.Where(e => EF.Functions.Like(filter.Value, $"%{filter.Value}%"));
+
+                        var likeExprCall = GetLikeExpressionCall<T>(filter.Field, filter.Value);
+                        var likeExpr = Expression.Lambda<Func<T, bool>>(likeExprCall, Expression.Parameter(typeof(T)));
+                        query = query.Where(likeExpr);
                         break;
 
                     case "nlike":
-                        string propertyName = filter.Field;
-                        object value = filter.Value;
-                        ParameterExpression parameter = Expression.Parameter(typeof(T));
-                        MemberExpression member = Expression.Property(parameter, propertyName);
-                        var memberTypeConverter = TypeDescriptor.GetConverter(member.Type);
-                        var constant = Expression.Constant(value == null ? null : memberTypeConverter.ConvertFrom(value.ToString()!), member.Type);
-
-                        var body = Expression.Call(
-                            typeof(DbFunctionsExtensions),
-                            nameof(DbFunctionsExtensions.Like),
-                            Type.EmptyTypes,
-                            Expression.Property(null, typeof(EF), nameof(EF.Functions)),
-                            member,
-                            constant
-                        );
-                        var expr = Expression.Not(body);
-                        query = query.Where(Expression.Lambda<Func<T, bool>>(expr, parameter));
+                        var nlikeExprCall = Expression.Not(GetLikeExpressionCall<T>(filter.Field, filter.Value));
+                        var nlikeExpr = Expression.Lambda<Func<T, bool>>(nlikeExprCall, Expression.Parameter(typeof(T)));
+                        query = query.Where(nlikeExpr);
                         break;
 
                     case "in":
@@ -111,6 +106,23 @@ namespace SampleUserManagement.Application.Common.Extensions
             }
 
             return query;
+        }
+
+        private static MethodCallExpression GetLikeExpressionCall<T>(string propertyName, object value)
+        {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression member = Expression.Property(parameter, propertyName);
+            var memberTypeConverter = TypeDescriptor.GetConverter(member.Type);
+            var constant = Expression.Constant(value == null ? null : memberTypeConverter.ConvertFrom(value.ToString()!), member.Type);
+
+            return Expression.Call(
+                typeof(DbFunctionsExtensions),
+                nameof(DbFunctionsExtensions.Like),
+                Type.EmptyTypes,
+                Expression.Property(null, typeof(EF), nameof(EF.Functions)),
+                member,
+                constant
+            );
         }
         #endregion
 
@@ -168,30 +180,30 @@ namespace SampleUserManagement.Application.Common.Extensions
             {
                 return totalData / limit;
             }
-            return (totalData / limit) + 1;
+            return totalData / limit + 1;
         }
 
         #endregion
 
 
         public static Expression<Func<T, object>> GetSortPropertyExpression<T>(string propertyName)
-		{
-			ParameterExpression parameter = Expression.Parameter(typeof(T));
-			MemberExpression property = Expression.Property(parameter, propertyName);
-			UnaryExpression propAsObject = Expression.Convert(property, typeof(object));
+        {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression property = Expression.Property(parameter, propertyName);
+            UnaryExpression propAsObject = Expression.Convert(property, typeof(object));
 
-			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
-		}
+            return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
+        }
 
-		public static Expression<Func<T, object>> GetSortPropertyExpression<T>(string propertyName, string childEntityName)
-		{
-			ParameterExpression parameter = Expression.Parameter(typeof(T));
-			MemberExpression childProperty = Expression.Property(parameter, childEntityName);
-			MemberExpression property = Expression.Property(childProperty, propertyName);
-			Expression conversion = Expression.Convert(property, typeof(object));
-			UnaryExpression propAsObject = Expression.Convert(conversion, typeof(object));
+        public static Expression<Func<T, object>> GetSortPropertyExpression<T>(string propertyName, string childEntityName)
+        {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression childProperty = Expression.Property(parameter, childEntityName);
+            MemberExpression property = Expression.Property(childProperty, propertyName);
+            Expression conversion = Expression.Convert(property, typeof(object));
+            UnaryExpression propAsObject = Expression.Convert(conversion, typeof(object));
 
-			return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
-		}
-	}
+            return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
+        }
+    }
 }

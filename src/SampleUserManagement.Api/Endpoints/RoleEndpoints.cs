@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Forms;
 using SampleUserManagement.Application.Features.Roles.CreateRole;
 using SampleUserManagement.Application.Features.Roles.DeleteRole;
 using SampleUserManagement.Application.Features.Roles.FilterRole;
@@ -15,7 +13,7 @@ namespace SampleUserManagement.Api.Endpoints
 	public static class RoleEndpoints
 	{
 		/// <summary>
-		/// Method to handle role minimal API
+		/// Method to register role minimal API
 		/// </summary>
 		/// <param name="builder"></param>
 		public static void MapRoleEndpoints(this IEndpointRouteBuilder builder)
@@ -58,7 +56,7 @@ namespace SampleUserManagement.Api.Endpoints
 		}
 
         /// <summary>
-        /// API to create role
+        /// API to create new role
         /// </summary>
         /// <param name="mediator"></param>
         /// <param name="request"></param>
@@ -71,7 +69,7 @@ namespace SampleUserManagement.Api.Endpoints
 		}
 
 		/// <summary>
-		/// API to update role
+		/// API to update existing role
 		/// </summary>
 		/// <param name="mediator"></param>
 		/// <param name="id"></param>
@@ -85,7 +83,7 @@ namespace SampleUserManagement.Api.Endpoints
 		}
 
 		/// <summary>
-		/// API to delete role
+		/// API to delete existing role
 		/// </summary>
 		/// <param name="mediator"></param>
 		/// <param name="id"></param>

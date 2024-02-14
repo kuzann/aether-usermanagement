@@ -7,7 +7,7 @@ namespace SampleUserManagement.Application.Features.Users.DeleteUser
 	{
         public DeleteUserMapper()
         {
-            CreateMap<User, DeleteUserResponse>();
+            CreateMap<User, UserResponse>();
         }
     }
 }
