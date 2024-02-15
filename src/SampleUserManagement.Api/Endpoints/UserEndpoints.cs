@@ -38,9 +38,9 @@ namespace SampleUserManagement.Api.Endpoints
 		/// <param name="httpContext"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		private static async Task<PaginatedList<UserResponse>> GetUser(IMediator mediator, HttpContext httpContext, CancellationToken cancellationToken)
+		private static async Task<PaginatedList<UserResponse>> GetUser(IMediator mediator, CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(new FilterUserRequest(httpContext.Request.Query), cancellationToken);
+            var result = await mediator.Send(new FilterUserRequest(), cancellationToken);
             return result;
         }
 

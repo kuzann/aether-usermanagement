@@ -34,7 +34,7 @@ namespace SampleUserManagement.Api.Controllers
         [HttpGet()]
         public async Task<IActionResult> Filter(CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(new FilterUserRequest(HttpContext.Request.Query), cancellationToken);
+            var response = await _mediator.Send(new FilterUserRequest(), cancellationToken);
             return Ok(response);
         }
 
