@@ -7,6 +7,7 @@ using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SampleUserManagement.Application.Features.Users.FilterUser
 {
@@ -41,20 +42,6 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
                 users = users.ApplyFilter(filters);
             }
 
-            //var parameter = Expression.Parameter(typeof(User));
-            //var property = Expression.Property(parameter, "FullName");
-            //var propAsObject = Expression.Convert(property, typeof(object));
-
-            //var sortExpr = Expression.Lambda<Func<User, object>>(propAsObject, parameter);
-
-            //Func<User, bool> filterFunc = user => user.FullName.Equals("Marion Bosco");
-            //Expression<Func<User, bool>> filterExprConvert = user => filterFunc(user);
-            //var compiler = filterExprConvert.Compile();
-            //users = users.Where(user => filterFunc.Invoke(user));
-
-            //Expression<Func<User, bool>> filterExprDirect = user => user.FullName.Contains("Ida");
-            //users = users.Where(filterExprDirect);
-
             // Implement sorting
             string? sort = queryCollection["sort"];
             if (!string.IsNullOrEmpty(sort))
@@ -73,7 +60,6 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             var data = _mapper.Map<List<UserResponse>>(await _repository.ExecuteAsync(users, cancellationToken));
 
             var meta = new Meta(data.Count, totalData, page, totalPage, limit);
-
 
             List<string> queryStrings = [];
 			foreach (var query in queryCollection)
