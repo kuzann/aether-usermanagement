@@ -5,7 +5,7 @@ namespace SampleUserManagement.Application.Configurations
 {
     public static class MapperSetup
     {
-        public static void AddAMapperSetup(this IServiceCollection services)
+        public static void AddMapperSetup(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }

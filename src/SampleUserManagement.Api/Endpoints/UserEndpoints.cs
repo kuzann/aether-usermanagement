@@ -20,25 +20,24 @@ namespace SampleUserManagement.Api.Endpoints
 		/// <param name="builder"></param>
 		public static void MapUserEndpoints(this IEndpointRouteBuilder builder)
 		{
-			var group = builder.MapGroup("v1/user").WithTags("User");
+			var group = builder.MapGroup("v1/users").WithTags("Users");
 
-			group.MapGet("/", GetUser);
+			group.MapGet("/", GetUser).Produces(400);
 			group.MapGet("{id}", GetUserById);
 			group.MapPost("/", CreateUser);
 			group.MapPut("{id}", UpdateUser);
 			group.MapDelete("{id}", DeleteUser);
 		}
 
-		#region Endpoint
+        #region Endpoint
 
-		/// <summary>
-		/// API to search user by specified filter
-		/// </summary>
-		/// <param name="mediator"></param>
-		/// <param name="httpContext"></param>
-		/// <param name="cancellationToken"></param>
-		/// <returns></returns>
-		private static async Task<PaginatedList<UserResponse>> GetUser(IMediator mediator, CancellationToken cancellationToken)
+        /// <summary>
+        /// API to search user by specified filter
+        /// </summary>
+        /// <param name="mediator"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<PaginatedList<UserResponse>> GetUser(IMediator mediator, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new FilterUserRequest(), cancellationToken);
             return result;

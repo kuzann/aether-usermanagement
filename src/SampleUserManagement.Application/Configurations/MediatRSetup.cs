@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using SampleUserManagement.Application.Common.Behaviors;
+using SampleUserManagement.Application.Common.Exceptions;
 using System.Reflection;
 
 namespace SampleUserManagement.Application.Configurations
@@ -9,6 +11,7 @@ namespace SampleUserManagement.Application.Configurations
     {
         public static void AddMediatRSetup(this IServiceCollection services)
         {
+            services.AddTransient(typeof(IRequestExceptionHandler<,,>), typeof(GlobalExceptionHandler<,,>));
             services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

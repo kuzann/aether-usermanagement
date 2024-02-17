@@ -6,14 +6,12 @@ using SampleUserManagement.Api.Endpoints;
 using SampleUserManagement.Application.Configurations;
 using SampleUserManagement.Infrastructure.Configurations;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 // Swagger
 builder.Services.AddSwaggerSetup();
 
@@ -22,10 +20,10 @@ builder.Services.AddDatabaseSetup(builder.Configuration);
 
 // Applicaton
 builder.Services.AddMediatRSetup();
-builder.Services.AddAMapperSetup();
+builder.Services.AddMapperSetup();
 builder.Services.AddValidationSetup();
 
-// HttpContextAcessor
+// Register HttpContextAcessor
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
@@ -38,11 +36,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-//app.MapControllers();
+// Register Endpoints
 app.MapUserEndpoints();
 app.MapRoleEndpoints();
-app.MapProductEndpoints();
 
 app.Run();

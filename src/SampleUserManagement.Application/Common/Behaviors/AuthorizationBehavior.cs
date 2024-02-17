@@ -30,7 +30,7 @@ namespace SampleUserManagement.Application.Common.Behaviors
                 }
 
                 var extractedApiKey = _httpContextAccessor.HttpContext?.Request.Headers["x-api-key"];
-                var apiKey = _configuration.GetValue<bool>("Authentication:ApiKey");
+                var apiKey = _configuration.GetValue<string>("Authentication:ApiKey");
                 if (!extractedApiKey.HasValue || extractedApiKey.Value != apiKey)
                 {
                     throw new Exception("Wrong API Key");

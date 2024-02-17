@@ -31,6 +31,7 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
 
         public async Task<PaginatedList<UserResponse>> Handle(FilterUserRequest request, CancellationToken cancellationToken)
         {
+            throw new NotImplementedException("Sample error");
             IQueryCollection queryCollection = _httpContext.Request.Query;
 			var filters = queryCollection.GetFilters();
 
