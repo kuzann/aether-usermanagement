@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.GetUser
 {
-	public record GetUserRequest(Guid Id) : IRequest<BaseResponse<UserResponse>>;
+	public record GetUserRequest(Guid Id) : IRequest<BaseResponse>;
 
-	public class GetUserHandler : IRequestHandler<GetUserRequest, BaseResponse<UserResponse>>
+	public class GetUserHandler : IRequestHandler<GetUserRequest, BaseResponse>
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
@@ -22,14 +22,14 @@ namespace SampleUserManagement.Application.Features.Users.GetUser
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<UserResponse>> Handle(GetUserRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(GetUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
             {
                 throw new Exception("User not found");
             }
-            return new BaseResponse<UserResponse>(_mapper.Map<UserResponse>(user));
+            return new BaseResponse(_mapper.Map<UserResponse>(user));
         }
     }
 }

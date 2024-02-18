@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SampleUserManagement.Application.Common.Responses;
+using System;
 
 namespace SampleUserManagement.Application.Features.Users
 {
-    public record UserResponse()
+    public record UserResponse
     {
         public Guid Id { get; init; }
         public string Email { get; init; } = null!;

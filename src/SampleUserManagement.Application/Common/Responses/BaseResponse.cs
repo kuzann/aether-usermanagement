@@ -6,5 +6,18 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Common.Responses
 {
-	public record BaseResponse<T>(T Data);
+	public record BaseResponse
+	{
+        public object? Data { get; init; }
+
+        public BaseResponse()
+        {
+            
+        }
+
+        public BaseResponse(object data)
+        {
+            Data = data;
+        }
+    }
 }

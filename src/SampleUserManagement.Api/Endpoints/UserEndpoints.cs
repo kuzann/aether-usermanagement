@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SampleUserManagement.Application.Common.Responses;
-using SampleUserManagement.Application.Features.Users;
 using SampleUserManagement.Application.Features.Users.CreateUser;
 using SampleUserManagement.Application.Features.Users.DeleteUser;
 using SampleUserManagement.Application.Features.Users.FilterUser;
@@ -29,15 +28,15 @@ namespace SampleUserManagement.Api.Endpoints
 			group.MapDelete("{id}", DeleteUser);
 		}
 
-        #region Endpoint
+		#region Endpoint
 
-        /// <summary>
-        /// API to search user by specified filter
-        /// </summary>
-        /// <param name="mediator"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private static async Task<PaginatedList<UserResponse>> GetUser(IMediator mediator, CancellationToken cancellationToken)
+		/// <summary>
+		/// API to search user by specified filter
+		/// </summary>
+		/// <param name="mediator"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
+		private static async Task<BaseResponse> GetUser(IMediator mediator, CancellationToken cancellationToken)
         {
             var result = await mediator.Send(new FilterUserRequest(), cancellationToken);
             return result;
@@ -50,7 +49,7 @@ namespace SampleUserManagement.Api.Endpoints
 		/// <param name="id"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		private static async Task<BaseResponse<UserResponse>> GetUserById(IMediator mediator, Guid id, CancellationToken cancellationToken) 
+		private static async Task<BaseResponse> GetUserById(IMediator mediator, Guid id, CancellationToken cancellationToken) 
 		{
 			var result = await mediator.Send(new GetUserRequest(id), cancellationToken);
 			return result;
@@ -63,7 +62,7 @@ namespace SampleUserManagement.Api.Endpoints
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<BaseResponse<UserResponse>> CreateUser(IMediator mediator, CreateUserRequest request, CancellationToken cancellationToken)
+        private static async Task<BaseResponse> CreateUser(IMediator mediator, CreateUserRequest request, CancellationToken cancellationToken)
 		{
 			var result = await mediator.Send(request, cancellationToken);
 			return result;
@@ -77,7 +76,7 @@ namespace SampleUserManagement.Api.Endpoints
 		/// <param name="request"></param>
 		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
-		private static async Task<BaseResponse<UserResponse>> UpdateUser(IMediator mediator, Guid id, UpdateUserRequest request, CancellationToken cancellationToken)
+		private static async Task<BaseResponse> UpdateUser(IMediator mediator, Guid id, UpdateUserRequest request, CancellationToken cancellationToken)
 		{
 			var result = await mediator.Send(request with { Id = id }, cancellationToken);
 			return result;
@@ -89,7 +88,7 @@ namespace SampleUserManagement.Api.Endpoints
 		/// <param name="mediator"></param>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		private static async Task<BaseResponse<UserResponse>> DeleteUser(IMediator mediator, Guid id)
+		private static async Task<BaseResponse> DeleteUser(IMediator mediator, Guid id)
 		{
 			var result = await mediator.Send(new DeleteUserRequest(id));
 			return result;

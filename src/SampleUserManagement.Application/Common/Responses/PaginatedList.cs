@@ -8,27 +8,18 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Common.Responses
 {
-	public record PaginatedList<T>
+	public record PaginatedList : BaseResponse
 	{
         public Meta Meta { get; set; } = null!;
-        public IEnumerable<T> Data { get; set; }
         public Links Links { get; set; } = null!;
 
-        public PaginatedList()
+        public PaginatedList() : base()
         {
-            Data = new List<T>();
         }
 
-        public PaginatedList(List<T> data)
+        public PaginatedList(object data, Meta meta, Links links)
+            : base(data)
         {
-            Data = data;
-            Meta = new Meta();
-            Links = new Links();
-        }
-
-        public PaginatedList(List<T> data, Meta meta, Links links)
-        {
-            Data = data;
             Meta = meta;
             Links = links;
         }

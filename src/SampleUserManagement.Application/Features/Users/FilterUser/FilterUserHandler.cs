@@ -11,9 +11,9 @@ using System.Reflection;
 
 namespace SampleUserManagement.Application.Features.Users.FilterUser
 {
-	public record FilterUserRequest() : IRequest<PaginatedList<UserResponse>>;
+	public record FilterUserRequest() : IRequest<BaseResponse>;
 
-	public class FilterUserHandler : IRequestHandler<FilterUserRequest, PaginatedList<UserResponse>>
+	public class FilterUserHandler : IRequestHandler<FilterUserRequest, BaseResponse>
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             _httpContext = httpContextAccessor.HttpContext;
         }
 
-        public async Task<PaginatedList<UserResponse>> Handle(FilterUserRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(FilterUserRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException("Sample error");
+            //throw new NotImplementedException("Sample error");
             IQueryCollection queryCollection = _httpContext.Request.Query;
 			var filters = queryCollection.GetFilters();
 
@@ -78,7 +78,7 @@ namespace SampleUserManagement.Application.Features.Users.FilterUser
             string last = queryPath + GeneratePageQueryString(totalPage, queryStrings.Count);
             var links = new Links(next, previous, first, last);
 
-			return new PaginatedList<UserResponse>(data, meta, links);
+			return new PaginatedList(data, meta, links);
         }
 
         private string GeneratePageQueryString(int page, int queryStringCount)

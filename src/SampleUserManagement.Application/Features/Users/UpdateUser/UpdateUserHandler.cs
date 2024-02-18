@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.UpdateUser
 {
-	public record UpdateUserRequest : IRequest<BaseResponse<UserResponse>>
+	public record UpdateUserRequest : IRequest<BaseResponse>
 	{
 		public Guid Id { get; init; }
 		public string Email { get; init; } = null!;
@@ -20,7 +20,7 @@ namespace SampleUserManagement.Application.Features.Users.UpdateUser
 		public string? DateOfBirth { get; init; }
 	}
 
-	public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, BaseResponse<UserResponse>>
+	public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, BaseResponse>
     {
         private readonly IRepository<User> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,7 +33,7 @@ namespace SampleUserManagement.Application.Features.Users.UpdateUser
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<UserResponse>> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
@@ -47,7 +47,7 @@ namespace SampleUserManagement.Application.Features.Users.UpdateUser
             _repository.Update(user);
             await _unitOfWork.Commit();
 
-            return new BaseResponse<UserResponse>(_mapper.Map<UserResponse>(user));
+            return new BaseResponse(_mapper.Map<UserResponse>(user));
         }
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.CreateUser
 {
-	public record CreateUserRequest(string Email, string Password, string? FullName, string? DateOfBirth) : IRequest<BaseResponse<UserResponse>>;
+	public record CreateUserRequest(string Email, string Password, string? FullName, string? DateOfBirth) : IRequest<BaseResponse>;
 
-	public class CreateUserHandler : IRequestHandler<CreateUserRequest, BaseResponse<UserResponse>>
+	public class CreateUserHandler : IRequestHandler<CreateUserRequest, BaseResponse>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,12 +23,12 @@ namespace SampleUserManagement.Application.Features.Users.CreateUser
             _repository = unitOfWork.GetRepository<User>();
         }
 
-        public async Task<BaseResponse<UserResponse>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<BaseResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<User>(request);
             _repository.Create(user);
             await _unitOfWork.Commit();
-            return new BaseResponse<UserResponse>(_mapper.Map<UserResponse>(user));
+            return new BaseResponse(_mapper.Map<UserResponse>(user));
         }
     }
 }
