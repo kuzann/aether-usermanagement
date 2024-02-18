@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using SampleUserManagement.Application.Common.Exceptions;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.DeleteUser
 {
@@ -32,7 +27,7 @@ namespace SampleUserManagement.Application.Features.Users.DeleteUser
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
             {
-                throw new Exception("User not found");
+                throw new NotFoundException("User not found");
             }
             _repository.Delete(user);
             await _unitOfWork.Commit();

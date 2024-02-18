@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Common.Responses
 {
-    public record ErrorResponse : BaseResponse
+    public class ErrorResponse : BaseResponse
     {
-        public string Status { get; init; }
-        public string Code { get; init; }
-        public string Message { get; init; }
-        public string? Trace { get; init; }
+        public string Status { get; set; } = null!;
+        public string Code { get; set; } = null!;
+		public string Message { get; set; } = null!;
+		public string? Trace { get; set; }
 
         public ErrorResponse()
         {

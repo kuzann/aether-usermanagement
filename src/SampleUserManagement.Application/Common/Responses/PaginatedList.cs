@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Common.Responses
 {
-	public record PaginatedList : BaseResponse
+	public class PaginatedList : BaseResponse
 	{
         public Meta Meta { get; set; } = null!;
         public Links Links { get; set; } = null!;

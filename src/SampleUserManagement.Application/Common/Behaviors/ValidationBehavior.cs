@@ -1,11 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using ValidationException = SampleUserManagement.Application.Common.Exceptions.ValidationException;
 
 namespace SampleUserManagement.Application.Common.Behaviors
 {
@@ -31,9 +26,10 @@ namespace SampleUserManagement.Application.Common.Behaviors
                     .Where(r => r.Errors.Any())
                     .SelectMany(r => r.Errors);
 
-                if (errors.Any())
+				if (errors.Any())
                 {
-                    throw new ValidationException(errors);
+                    string message = errors.First().ErrorMessage;
+                    throw new ValidationException(errors, message);
                 }
             }
 

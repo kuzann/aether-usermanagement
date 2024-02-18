@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Common.Responses
 {
-	public record BaseResponse
+	public class BaseResponse
 	{
         public object? Data { get; init; }
 

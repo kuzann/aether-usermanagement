@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using SampleUserManagement.Application.Common.Exceptions;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.GetUser
 {
@@ -27,7 +25,7 @@ namespace SampleUserManagement.Application.Features.Users.GetUser
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
             {
-                throw new Exception("User not found");
+                throw new NotFoundException("User not found");
             }
             return new BaseResponse(_mapper.Map<UserResponse>(user));
         }

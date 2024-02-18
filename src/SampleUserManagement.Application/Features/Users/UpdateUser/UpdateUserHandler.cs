@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
 using SampleUserManagement.Application.Common;
+using SampleUserManagement.Application.Common.Exceptions;
 using SampleUserManagement.Application.Common.Extensions;
 using SampleUserManagement.Application.Common.Interfaces;
 using SampleUserManagement.Application.Common.Responses;
 using SampleUserManagement.Domain.Entities;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SampleUserManagement.Application.Features.Users.UpdateUser
 {
@@ -38,7 +36,7 @@ namespace SampleUserManagement.Application.Features.Users.UpdateUser
             var user = await _repository.Get(request.Id, cancellationToken);
             if (user == null)
             {
-                throw new Exception("User not found");
+                throw new NotFoundException("User not found");
             }
             user.Email = request.Email;
             user.Password = request.Password;
